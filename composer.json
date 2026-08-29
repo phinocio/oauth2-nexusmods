@@ -1,0 +1,21 @@
+{
+    "name": "phinocio/oauth2-nexus-mods",
+    "description": "Unofficial Nexus Mods provider for league/oauth2-client",
+    "type": "library",
+    "require": {
+        "league/oauth2-client": "^2.9"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Phinocio\\Oauth2NexusMods\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Phinocio",
+            "email": "github@phinocio.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
