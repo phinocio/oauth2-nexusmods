@@ -3,6 +3,7 @@
     "description": "Unofficial Nexus Mods provider for league/oauth2-client",
     "type": "library",
     "require": {
+		"php": ">=8.2",
         "league/oauth2-client": "^2.9"
     },
     "license": "MIT",
