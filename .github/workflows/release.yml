@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version from composer.json
+        id: version
+        run: |
+          VERSION=$(jq -r '.version // empty' composer.json)
+
+          if [ -z "$VERSION" ]; then
+            echo "::error::No 'version' field found in composer.json"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          TAG="v${VERSION#v}"
+          echo "tag_name=$TAG" >> "$GITHUB_OUTPUT"
+
+          PREV_TAG=$(git describe --tags --match "v*.*.*" --abbrev=0 2>/dev/null || echo "")
+          echo "previous_tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
+
+          echo "Version: $VERSION → Tag: $TAG (previous: ${PREV_TAG:-none})"
+
+      - name: Skip if tag already exists
+        id: check
+        run: |
+          if git rev-parse "refs/tags/${{ steps.version.outputs.tag_name }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Tag ${{ steps.version.outputs.tag_name }} already exists — skipping release."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Release
+        if: steps.check.outputs.exists != 'true'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.tag_name }}
+          target_commitish: ${{ github.sha }}
+          previous_tag: ${{ steps.version.outputs.previous_tag }}
+          generate_release_notes: true
+          make_latest: "true"
