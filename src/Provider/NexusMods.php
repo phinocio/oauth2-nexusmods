@@ -12,64 +12,64 @@ use Psr\Http\Message\ResponseInterface;
 
 class NexusMods extends AbstractProvider
 {
-	use BearerAuthorizationTrait;
+    use BearerAuthorizationTrait;
 
-	protected const BASE_NEXUS_URL = 'https://users.nexusmods.com';
+    protected const BASE_NEXUS_URL = 'https://users.nexusmods.com';
 
-	/**
-	 * @return string
-	 */
-	public function getBaseAuthorizationUrl(): string
-	{
-		return self::BASE_NEXUS_URL . '/oauth/authorize';
-	}
+    /**
+     * @return string
+     */
+    public function getBaseAuthorizationUrl(): string
+    {
+        return self::BASE_NEXUS_URL . '/oauth/authorize';
+    }
 
-	/**
-	 * @param array<string, string> $params
-	 * @return string
-	 */
-	public function getBaseAccessTokenUrl(array $params): string
-	{
-		return self::BASE_NEXUS_URL . '/oauth/token';
-	}
+    /**
+     * @param array<string, string> $params
+     * @return string
+     */
+    public function getBaseAccessTokenUrl(array $params): string
+    {
+        return self::BASE_NEXUS_URL . '/oauth/token';
+    }
 
-	/**
-	 * @param AccessToken $token
-	 * @return string
-	 * */
-	public function getResourceOwnerDetailsUrl(AccessToken $token): string
-	{
-		return self::BASE_NEXUS_URL . '/oauth/userinfo';
-	}
+    /**
+     * @param AccessToken $token
+     * @return string
+     * */
+    public function getResourceOwnerDetailsUrl(AccessToken $token): string
+    {
+        return self::BASE_NEXUS_URL . '/oauth/userinfo';
+    }
 
-	/** @return array<int, string> */
-	protected function getDefaultScopes(): array
-	{
-		return ['openid public profile'];
-	}
+    /** @return array<int, string> */
+    protected function getDefaultScopes(): array
+    {
+        return ['openid public profile'];
+    }
 
-	/**
-	 * @param ResponseInterface $response
-	 * @param string|array<string, array<string,string|int>> $data
-	 * @return void
-	 */
-	protected function checkResponse(ResponseInterface $response, $data): void
-	{
-		if (empty($data['error'])) {
-			return;
-		}
+    /**
+     * @param ResponseInterface $response
+     * @param string|array<string, array<string,string|int>> $data
+     * @return void
+     */
+    protected function checkResponse(ResponseInterface $response, $data): void
+    {
+        if (empty($data['error'])) {
+            return;
+        }
 
-		$message = $data['error']['type'] . ': ' . $data['error']['message'];
-		throw new IdentityProviderException($message, (int) $data['error']['code'], $data);
-	}
+        $message = $data['error']['type'] . ': ' . $data['error']['message'];
+        throw new IdentityProviderException($message, (int) $data['error']['code'], $data);
+    }
 
-	/**
-	 * @param array<string> $response
-	 * @param AccessToken $token
-	 * @return NexusModsResourceOwner
-	 * */
-	protected function createResourceOwner(array $response, AccessToken $token): NexusModsResourceOwner
-	{
-		return new NexusModsResourceOwner($response);
-	}
+    /**
+     * @param array<string> $response
+     * @param AccessToken $token
+     * @return NexusModsResourceOwner
+     * */
+    protected function createResourceOwner(array $response, AccessToken $token): NexusModsResourceOwner
+    {
+        return new NexusModsResourceOwner($response);
+    }
 }

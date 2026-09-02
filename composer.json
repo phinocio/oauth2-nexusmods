@@ -24,6 +24,8 @@
         "friendsofphp/php-cs-fixer": "^3.95"
     },
 	"scripts": {
+		"lint": "php-cs-fixer check",
+		"lint:fix": "php-cs-fixer fix",
 		"test:types": "phpstan"
 	}
 }
