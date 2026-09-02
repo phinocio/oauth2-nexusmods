@@ -3,23 +3,57 @@
 namespace Phinocio\Oauth2NexusMods\Provider;
 
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use League\OAuth2\Client\Tool\ArrayAccessorTrait;
 
 class NexusModsResourceOwner implements ResourceOwnerInterface
 {
-	public function __construct(public array $response) {}
+	use ArrayAccessorTrait;
 
-	public function getUsername(): string
+	public function __construct(protected array $response) {}
+
+	public function getId()
 	{
-		return $this->response['username'] ?? 'Meow';
+		return $this->getValueByKey($this->response, 'sub');
 	}
 
-	public function getId(): int
+	public function getName(): ?string
 	{
-		return 1;
+		return $this->getValueByKey($this->response, 'name');
+	}
+
+
+	public function getEmail(): ?string
+	{
+		return $this->getValueByKey($this->response, 'email');
+	}
+
+	public function getAvatar(): ?string
+	{
+		return $this->getValueByKey($this->response, 'avatar');
+	}
+
+	public function getGroupId(): ?int
+	{
+		return $this->getValueByKey($this->response, 'group_id');
+	}
+
+	public function getMembershipRoles(): ?array
+	{
+		return $this->getValueByKey($this->response, 'membership_roles');
+	}
+
+	public function getPremiumExpiry(): ?string
+	{
+		return $this->getValueByKey($this->response, 'premium_expiry');
+	}
+
+	public function getAgeVerified(): ?bool
+	{
+		return $this->getValueByKey($this->response, 'age_verified');
 	}
 
 	public function toArray(): array
 	{
-		return ['meow'];
+		return $this->response;
 	}
 }

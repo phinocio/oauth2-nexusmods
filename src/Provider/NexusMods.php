@@ -5,10 +5,13 @@ namespace Phinocio\Oauth2NexusMods\Provider;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 
 class NexusMods extends AbstractProvider
 {
+	use BearerAuthorizationTrait;
+
 	protected const BASE_NEXUS_URL = 'https://users.nexusmods.com';
 
 	public function getBaseAuthorizationUrl(): string
@@ -28,7 +31,7 @@ class NexusMods extends AbstractProvider
 
 	protected function getDefaultScopes(): array
 	{
-		return [];
+		return ['openid public profile'];
 	}
 
 	protected function checkResponse(ResponseInterface $response, $data): void
@@ -43,6 +46,7 @@ class NexusMods extends AbstractProvider
 
 	protected function createResourceOwner(array $response, AccessToken $token): NexusModsResourceOwner
 	{
+		echo 'response:' . gettype($response);
 		return new NexusModsResourceOwner($response);
 	}
 }
