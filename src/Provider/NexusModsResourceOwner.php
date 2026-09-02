@@ -21,20 +21,9 @@ class NexusModsResourceOwner implements ResourceOwnerInterface
 		return $this->getValueByKey($this->response, 'name');
 	}
 
-
-	public function getEmail(): ?string
-	{
-		return $this->getValueByKey($this->response, 'email');
-	}
-
 	public function getAvatar(): ?string
 	{
 		return $this->getValueByKey($this->response, 'avatar');
-	}
-
-	public function getGroupId(): ?int
-	{
-		return $this->getValueByKey($this->response, 'group_id');
 	}
 
 	public function getMembershipRoles(): ?array
